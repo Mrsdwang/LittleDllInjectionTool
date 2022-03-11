@@ -1,6 +1,8 @@
 # LittleDllInjectionTool
 Dll injection tool, For learning Windows reverse technique
+
 Support x86 and x64
+
 Injection technique will keep updating
 
 	Usage: dll_inject.exe <procname|pid|*> <mod:-i|-e> <Injection technique> <dll path>
@@ -21,6 +23,7 @@ Injection technique will keep updating
 	5. DLL injection via ReflectiveInjection()
   
   Reference :
+  
   [injectAllTheThings](https://github.com/DanielRTeixeira/injectAllTheThings)
   
   [ReflectiveDLLInjection](https://github.com/stephenfewer/ReflectiveDLLInjection)
