@@ -3,9 +3,9 @@ Dll injection tool, For learning Windows reverse technique
 Support x86 and x64
 Injection technique will keep updating
 
-Usage: dll_inject.exe <procname|pid|*> <mod:-i|-e> <Injection technique> <dll path>
+	Usage: dll_inject.exe <procname|pid|*> <mod:-i|-e> <Injection technique> <dll path>
 	procname|pid|*:
-  procname|pid: Dll Injecting to procename|pid
+  	procname|pid: Dll Injecting to procename|pid
 	*: Dll Injecting to all process
 	mod:
 	-i: Dll Injection
@@ -22,5 +22,6 @@ Usage: dll_inject.exe <procname|pid|*> <mod:-i|-e> <Injection technique> <dll pa
   
   Reference :
   [injectAllTheThings](https://github.com/DanielRTeixeira/injectAllTheThings)
+  
   [ReflectiveDLLInjection](https://github.com/stephenfewer/ReflectiveDLLInjection)
   
