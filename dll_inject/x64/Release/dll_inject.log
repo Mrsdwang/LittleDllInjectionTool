@@ -1,0 +1,8 @@
+﻿  auxiliary.cpp
+F:\dll_inject\dll_inject\dll_inject\auxiliary.cpp(180,2): warning C4996: 'GetVersionExW': 被声明为已否决
+  正在生成代码
+  2 of 24 functions ( 8.3%) were compiled, the rest were copied from previous compilation.
+    0 functions were new in current compilation
+    0 functions had inline decision re-evaluated but remain unchanged
+  已完成代码的生成
+  dll_inject.vcxproj -> F:\dll_inject\dll_inject\x64\Release\dll_inject.exe
