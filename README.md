@@ -5,7 +5,7 @@ Support x86 and x64
 
 Injection technique will keep updating
 
-Chinese Blog Analysis: Writing now... update the website after completion
+Chinese Blog Analysis: https://www.int80.top/dllinjection/
 
 	Usage: dll_inject.exe <procname|pid|*> <mod:-i|-e> <Injection technique> <dll path>
 	procname|pid|*:
