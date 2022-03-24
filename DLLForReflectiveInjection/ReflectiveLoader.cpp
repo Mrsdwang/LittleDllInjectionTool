@@ -147,6 +147,7 @@ DLLEXPORT ULONG_PTR WINAPI ReflectiveLoader(VOID)
 		// get pointer to current modules name (unicode string)
 		// 这里的uiValueA不是注释掉了第一个成员，那为什么BaseDllName还是原地址而不是前一个成员的变量呢？
 		// 难道转换类型后不应该自动 的把结构体第一个成员保存着起始地址的数据吗，也就是InMemoryOrderModule的成员存的是InLoadLinks的数据
+		// 解释是是因为字节对称，因此还是会保持原来的对应结构
 		// 获取当前DLL的名称
 		uiValueB = (ULONG_PTR)((PLDR_DATA_TABLE_ENTRY)uiValueA)->BaseDllName.pBuffer;
 		// set bCounter to the length for the loop
@@ -458,10 +459,9 @@ DLLEXPORT ULONG_PTR WINAPI ReflectiveLoader(VOID)
 	// 步骤 5: 处理Images的重定位
 	// calculate the base address delta and perform relocations (even if we load at desired image base)
 	// 计算基址增量并执行重定位(即使加载到了期望的Image基址
-	// 为目标DLL文件申请的内存空间的基址 - 目标DLL文件的ImageBase(指出DLL文件优先加载的地址,为RVA)
-	// 为什么是相减？因为ImageBase为RVA，减掉好再重定位后加上新的RVA
-	// 这也是加载器的重定位时需要做的，加载器遍历重定位表,找到要修正的数据，
-	// 然后用(实际Image地址 - DLL默认ImageBase) + 重定位数据地址(在后面会加)这个公式进行重定位
+	// 为目标DLL文件申请的内存空间的基址 - 目标DLL文件的ImageBase
+	// 为什么是相减？根据公式(实际Image地址 + 需要重定位地址的值 - DLL默认ImageBase)，在这里需要重定位地址的值在后面才会得到，因此在这里先执行相减操作
+	// 这也是加载器的重定位时需要做的，加载器遍历重定位表,找到要修正的数据
 	uiLibraryAddress = uiBaseAddress - ((PIMAGE_NT_HEADERS)uiHeaderValue)->OptionalHeader.ImageBase;
 
 	// uiValueB = the address of the relocation directory
@@ -502,8 +502,8 @@ DLLEXPORT ULONG_PTR WINAPI ReflectiveLoader(VOID)
 				// we dont use a switch statement to avoid the compiler building a jump table
 				// which would not be very position independent!
 				// 执行重定位，可以跳过 IMAGE_REL_BASED_ABSOLUTE(重定位类型,无特别意义，只是为了让每个段4字节对齐，就是填充作用，里面并没有数据)
-				// 不使用switch表达式来避免编译器构建一个位置不是那么独立的跳转表?????
-
+				// 不使用switch表达式来避免编译器构建一个位置不是那么独立的跳转表
+				// switch汇编后会在.rdata节区处生成跳转表以供switch用来当作跳转参考
 				//IMAGE_REL_BASED_DIR64(重定位类型,对指向的整个地址进行修正
 				//(实际Image地址 - DLL默认ImageBase) + 重定位数据地址(RVA)
 				// 这里uiLibraryAddress 为(实际Image地址 - DLL默认ImageBase),
@@ -511,7 +511,7 @@ DLLEXPORT ULONG_PTR WINAPI ReflectiveLoader(VOID)
 				if (((PIMAGE_RELOC)uiValueD)->type == IMAGE_REL_BASED_DIR64)
 					//就是 IMAGE_BASE_RELOCATION + offset = 重定位后的RVA地址，然后该RVA地址的值 + uiLibraryAddress = 重定位后在内存的VA
 					*(ULONG_PTR*)(uiValueA + ((PIMAGE_RELOC)uiValueD)->offset) += uiLibraryAddress;
-				// 同上，这两个重定位类型都是对指向的整个地址修正，好像是一个x64一个x86
+				// 同上，这两个重定位类型都是对指向的整个地址修正，一个x64一个x86
 				// 也可以注意到不同的重定位类型只是影响地址取多少位
 				else if (((PIMAGE_RELOC)uiValueD)->type == IMAGE_REL_BASED_HIGHLOW)
 					*(DWORD*)(uiValueA + ((PIMAGE_RELOC)uiValueD)->offset) += (DWORD)uiLibraryAddress;

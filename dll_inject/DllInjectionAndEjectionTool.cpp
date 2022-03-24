@@ -84,13 +84,7 @@ BOOL InjectDll(DWORD dwPID, LPCTSTR szDllPath, int tech,int nMod)
 			goto INJECTDLL_EXIT;
 		}
 		break;
-	/*case 5:
-		if (!(Result = MysuspendThread(hProcess, hThreadProc, pRemoteBuf,dwPID)))
-		{
-			wprintf(TEXT("[-] Error: Inject(): MysuspendThread() Failed! [%d]\n"), GetLastError());
-			goto INJECTDLL_EXIT;
-		}
-		break;*/
+	
 	case 5:
 		if (!(Result = ReflectiveDllInjection(szDllPath, dwPID)))
 		{
@@ -99,6 +93,14 @@ BOOL InjectDll(DWORD dwPID, LPCTSTR szDllPath, int tech,int nMod)
 		}
 		IsReflective = TRUE;
 		break;
+	/*case 6:
+		if (!(Result = MysuspendThread(hProcess, hThreadProc, pRemoteBuf,dwPID)))
+		{
+			wprintf(TEXT("[-] Error: Inject(): MysuspendThread() Failed! [%d]\n"), GetLastError());
+			goto INJECTDLL_EXIT;
+		}
+		break;
+		*/
 	}
 	
 	if (!IsReflective)

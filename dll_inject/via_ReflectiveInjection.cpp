@@ -58,7 +58,7 @@ BOOL ReflectiveDllInjection(PCWSTR cpDllFile, DWORD dwPID)
 	do
 	{
 		hFile = CreateFileW(cpDllFile, GENERIC_READ, 0, NULL, OPEN_EXISTING,FILE_ATTRIBUTE_NORMAL, NULL);
-		// 这里的BREAK_WITH_ERROR后面跟了分号，是因为没有else,否则else将丢失if
+
 		if (hFile == INVALID_HANDLE_VALUE)
 		{
 			wprintf(TEXT("[-] Error: Inject(): CreateFileW() Failed! [%d]\n"), GetLastError());

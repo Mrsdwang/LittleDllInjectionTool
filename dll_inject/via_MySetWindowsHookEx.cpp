@@ -6,13 +6,14 @@
 
 BOOL MySetWindowsHookEx(LPCTSTR szDllPath, DWORD dwPID, LPCTSTR ProcName)
 {
+	// 获得目标进程当前的线程ID
 	DWORD ThreadID = GetThreadID(dwPID);
 	if (ThreadID == (DWORD)0)
 	{
 		wprintf(L"[-] Error: MySetWindowsHookEx(): GetThreadID() failed!\n");
 		return FALSE;
 	}
-
+	// 加载目标DLL，但不在加载以及卸载的时候执行DllMain函数
 	HMODULE dll = LoadLibraryEx(szDllPath, NULL, DONT_RESOLVE_DLL_REFERENCES);
 	if (dll == NULL)
 	{
@@ -27,9 +28,10 @@ BOOL MySetWindowsHookEx(LPCTSTR szDllPath, DWORD dwPID, LPCTSTR ProcName)
 		wprintf(L"[-] Error: MySetWindowsHookEx(): GetProcAddress() failed!\n");
 		return FALSE;
 	}
-
-	HWND targetWnd = FindWindow(NULL, ProcName);
-	GetWindowThreadProcessId(targetWnd, &dwPID);
+	// 返回目标进程的窗口句柄
+	//HWND targetWnd = FindWindow(NULL, ProcName);
+	// 获取获取目标进程的PID
+	//GetWindowThreadProcessId(targetWnd, &dwPID);
 
 	HHOOK handle = SetWindowsHookEx(WH_KEYBOARD, addr, dll, ThreadID);
 	if (handle == NULL)
